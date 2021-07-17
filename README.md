@@ -24,3 +24,15 @@ The method/architecture being employed
 ![image](https://user-images.githubusercontent.com/50414959/126045942-b59f62aa-0a53-4a86-9ab7-1a57e0a1e31b.png)
 
 
+### Sample Images and text used
+![test_1_306x450](https://user-images.githubusercontent.com/50414959/126046697-8b1bb468-c1ac-45a9-bb76-5534307fe30f.png)
+
+_Hey, This is Sai Tharun here and the person who wrote this cool bit of code. This text is the secret message that is to be hidden in the picture._
+
+
+### Sample encoded image
+![test_encoded_1_306x450](https://user-images.githubusercontent.com/50414959/126046721-495ef9fc-676e-42ba-9efe-bb3152e3742b.png)
+
+As you can see there is no difference between the Sample Image and the encoded image.
+
+

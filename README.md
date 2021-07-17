@@ -18,7 +18,7 @@ The method/architecture being employed
 
 ### Code Explanation
 The code is writtern in as a command line argument format with the appropriate commands as shown in the snippets provided below.<br>
-Here we are using the [Least Significant Bit](https://ieeexplore.ieee.org/document/6949808) Steganography technique to perform the encoding and decoding.
+Here we are using the [Least Significant Bit](https://ieeexplore.ieee.org/document/6949808) Steganography technique of performing the encoding and decoding.
 
 
 #### Text_Encoder.py

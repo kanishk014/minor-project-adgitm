@@ -52,6 +52,6 @@ _Hey, This is Sai Tharun here and the person who wrote this cool bit of code. Th
 #### Sample encoded image obtained
 ![test_encoded_1_306x450](https://user-images.githubusercontent.com/50414959/126046721-495ef9fc-676e-42ba-9efe-bb3152e3742b.png)
 
-As you can see there is no difference between the Sample Image and the encoded image.
+As you can see there is no difference between the Sample Image and the encoded image, yet the text is encoded into the image. Magic! I say.
 
 

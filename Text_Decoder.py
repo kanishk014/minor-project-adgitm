@@ -4,6 +4,8 @@ import cv2
 import numpy as np
 import argparse
 
+#global list
+text = []
 
 # Function to convert the the content into it's relevant binary form
 def to_binary(msg):
@@ -16,6 +18,7 @@ def to_binary(msg):
         return format(msg, "08b")
     else:
         raise TypeError("Input Type is not supported")
+        
 
 
 # Getting the hidden data from the image
@@ -43,30 +46,40 @@ def getData(img):
         if decoded_data[-3:] == '###':
             break
     # remove the delimiter string from the final decoded message
-    return decoded_data[:-3]
+    seqNo = decoded_data[-7]
+    text.insert(int(seqNo), decoded_data[:-7])
+    # return decoded_data[:-7]
 
 
 # Decode the data from the image
 def decode(filename):
-    img = cv2.imread(filename)
-    text = getData(img)
-    # Print the decoded text into a text file in the same directory as the code file
-    file = open('Extracted_msg.txt', 'w')
-    file.write(text)
-    file.close()
+    # img = cv2.imread(image)
+    getData(filename)
+    # return text
 
 
 if __name__ == '__main__':
 
     # Building a command line argument
-    parser = argparse.ArgumentParser(
-        description='Decode text inside an image generated with encoded data by the Encoder.')
+    # parser = argparse.ArgumentParser(
+    #     description='Decode text inside an image generated with encoded data by the Encoder.')
 
-    # Collecting the filename of the image which is to be decoded
-    parser.add_argument('image', type=str,
-                        help='Enter the filename of the image which contains the encoded text.')
+    # # Collecting the filename of the image which is to be decoded
+    # parser.add_argument('image', type=str,
+    #                     help='Enter the filename of the image which contains the encoded text.')
 
-    args = parser.parse_args()
-    filename = args.image
+    # args = parser.parse_args()
+    # filename = args.image
+    result=""
+    for x in range(0,5):
+        file_path = f'./_encoded{x}.png'
+        image = cv2.imread(file_path)
+        decode(image)
     
-    decode(filename)
+    for x in range(0,5):
+        result = result + text[x]       
+    # Print the decoded text into a text file in the same directory as the code file    
+    
+    file = open('Extracted_msg.txt', 'w')
+    file.write(result)
+    file.close()

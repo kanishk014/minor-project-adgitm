@@ -5,7 +5,13 @@ import numpy as np
 import argparse
 from pathlib import Path
 import math
+import getpass
+import os
 
+#Global Variables used in program
+count=0
+d = []
+password = ""
 
 # Function to convert the the content into it's relevant binary form
 def to_binary(msg):
@@ -63,32 +69,35 @@ def hidedata(s_msg):
 
     length = len(s_msg)
         
-    ch = math.ceil(length/5)
+    ch = math.ceil(length/count)
 
     messageList = []
     i=0
     
     # Adding The delimiter string to every list entry
-    for x in range(0, 5):
+    for x in range(0, count):
         part= s_msg[i:i+ch]
-        message_text = part+f"{x}seq###"
+        if(x == 0):
+          message_text = part+f"@%#/{password}@%#/{x}seq###"
+        else: 
+          message_text = part+f"{x}seq###"
         b_msg = to_binary(message_text)
         messageList.append(b_msg)      
-        i = i+ch
-        
+        i = i+ch        
+            
     return messageList
 
 
 # Encode the data into the image
 #looping all images and encoding message data in those images
+
 def encode(data):
-    d = ["1.jpeg","2.jpeg","3.jpeg","4.jpeg","5.png"]
-    
+
     # Check if data to be encoded is provided
     if len(data) == 0:
         raise ValueError("Text to be encoded is not given")
 
-
+    
     messageList = hidedata(data)
     i = 0
     for x in d:
@@ -98,10 +107,18 @@ def encode(data):
         path = '\\'.join(file_path.split('\\')[:-1]) if '\\' in file_path else ''
         encode_filename = file_path.split('\\')[-1].split('.')[0]
         path += ('\\' + encode_filename) if '\\' in file_path else encode_filename
-
-        cv2.imwrite(f'{path}_encoded{i}.png', encoded_img)
+        folderPath = path + './encodedImages/'
+        if(x == 0):          
+          os.mkdir(folderPath)
+          
+        cv2.imwrite(f'{folderPath}_encoded{i}.png', encoded_img)
         i=i+1
-
+        
+def dir_path(string):
+    if os.path.isdir(string):
+        return string
+    else:
+        raise NotADirectoryError(string)
 
 if __name__ == '__main__':
 
@@ -113,10 +130,39 @@ if __name__ == '__main__':
     #                     help='Enter the filename of your target image into which you want to hide the text')
     parser.add_argument('text_filename', type=str,
                         help='Enter the filename of the text file that contains the text to be hidden')
+    
+    # argument parser for getting directtory of images
+    parser.add_argument('--path', type=dir_path, help='Enter the folder name in which you want to split images')
 
     args = parser.parse_args()
-    filename = open(args.text_filename, 'r')
+    filename = open(args.text_filename, 'r')    
     data = filename.read()
+    imagesDirectoryPath = args.path
+
+    # Count number of files/images in directory
+    
+    for path in os.listdir(imagesDirectoryPath):
+    # check if current path is a file
+        if (os.path.isfile(os.path.join(imagesDirectoryPath, path))):                  
+          d.append(path)
+          count += 1
+
+    if(count == 0):
+        raise EOFError("Directory does not contain any file")
+    elif (count > 9): 
+        raise ValueError("Only 9 files allowed maximum")
+
+    try:
+      password = getpass.getpass(prompt='Set a password for encryption: ')
+      confirmPassword = getpass.getpass(prompt='Confirm your password: ')
+      if (password != confirmPassword):
+        raise Exception
+    except Exception as error:
+      print('Password does not match', error)    
+      exit(0)
+    
+    
+    ## counting of files in directory logic ended
 
     # filename = args.image_filename
 

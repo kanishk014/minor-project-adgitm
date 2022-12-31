@@ -3,9 +3,13 @@
 import cv2
 import numpy as np
 import argparse
-
+import os
+import getpass
 #global list
 text = []
+count=0
+d = []
+password = ""
 
 # Function to convert the the content into it's relevant binary form
 def to_binary(msg):
@@ -46,8 +50,17 @@ def getData(img):
         if decoded_data[-3:] == '###':
             break
     # remove the delimiter string from the final decoded message
-    seqNo = decoded_data[-7]
-    text.insert(int(seqNo), decoded_data[:-7])
+    seqNo = decoded_data[-7]    
+    
+    if (seqNo == '0'):
+      originalStr = decoded_data[:-7]
+      originalStrPassword = originalStr.split('@%#/')[1]
+      if (password != originalStrPassword):        
+        raise Exception("Password is not valid")
+      total = 7 + 8 + len(originalStrPassword)
+      text.insert(int(seqNo), decoded_data[:-total])
+    else:
+        text.insert(int(seqNo), decoded_data[:-7])
     # return decoded_data[:-7]
 
 
@@ -57,6 +70,12 @@ def decode(filename):
     getData(filename)
     # return text
 
+# directory path
+def dir_path(string):
+    if os.path.isdir(string):
+        return string
+    else:
+        raise NotADirectoryError(string)
 
 if __name__ == '__main__':
 
@@ -70,15 +89,44 @@ if __name__ == '__main__':
 
     # args = parser.parse_args()
     # filename = args.image
+    parser = argparse.ArgumentParser(description='Enter directory in which decoded files are present')
+
+    # Collecting the filename of the image and file containing the text to be hidden
+    # parser.add_argument('image_filename', type=str,
+    #                     help='Enter the filename of your target image into which you want to hide the text')    
+    
+    # argument parser for getting directtory of images
+    parser.add_argument('--path', type=dir_path, help='Enter the folder name in which you want to split images')
+
+    args = parser.parse_args()
+    imagesDirectoryPath = args.path
+
+    # Count number of files/images in directory
+    
+    for path in os.listdir(imagesDirectoryPath):
+    # check if current path is a file
+        if (os.path.isfile(os.path.join(imagesDirectoryPath, path))):                  
+          d.append(path)          
+          count += 1
+    
+    try:
+      password = getpass.getpass(prompt='Enter password for decryption: ')                    
+    except Exception as error:
+      print('ERROR', error)
+      exit(0)
+
+
     result=""
-    for x in range(0,5):
-        file_path = f'./_encoded{x}.png'
+    for x in range(0,count):
+        file_path = f'./{imagesDirectoryPath}/{d[x]}'
         image = cv2.imread(file_path)
         decode(image)
     
-    for x in range(0,5):
+    for x in range(0,count):
         result = result + text[x]       
-    # Print the decoded text into a text file in the same directory as the code file    
+    # Print the decoded text into a text file in the same directory as the code file 
+
+              
     
     file = open('Extracted_msg.txt', 'w')
     file.write(result)

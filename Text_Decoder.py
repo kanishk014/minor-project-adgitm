@@ -57,6 +57,8 @@ def getData(img):
       originalStrPassword = originalStr.split('@%#/')[1]
       if (password != originalStrPassword):        
         raise Exception("Password is not valid")
+      else:
+        print("Executing extraction....")
       total = 7 + 8 + len(originalStrPassword)
       text.insert(int(seqNo), decoded_data[:-total])
     else:

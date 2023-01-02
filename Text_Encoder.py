@@ -101,7 +101,8 @@ def encode(data):
     messageList = hidedata(data)
     i = 0
     for x in d:
-        file_path = f"./images/{x}"
+        file_path = f"./images/{x}"  
+        print(f"Starting encoding in image {x}...")      
         image = cv2.imread(file_path)
         encoded_img = encoding_in_image(image, messageList[i])
         path = '\\'.join(file_path.split('\\')[:-1]) if '\\' in file_path else ''
@@ -113,6 +114,9 @@ def encode(data):
           
         cv2.imwrite(f'{folderPath}_encoded{i}.png', encoded_img)
         i=i+1
+
+    print(".\n.\n.\n.")
+    print("Encoding completed!")        
         
 def dir_path(string):
     if os.path.isdir(string):

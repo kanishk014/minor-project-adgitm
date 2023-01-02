@@ -58,7 +58,7 @@ def getData(img):
       if (password != originalStrPassword):        
         raise Exception("Password is not valid")
       else:
-        print("Executing extraction....")
+        print("Initializing extraction....")
       total = 7 + 8 + len(originalStrPassword)
       text.insert(int(seqNo), decoded_data[:-total])
     else:
@@ -132,4 +132,6 @@ if __name__ == '__main__':
     
     file = open('Extracted_msg.txt', 'w')
     file.write(result)
+    print(".\n.\n.")
+    print(">>> Extraction completed.")
     file.close()
